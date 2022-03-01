@@ -1,10 +1,14 @@
+import dayjs from "dayjs";
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Auth } from "./Auth";
 import { Role } from "./Role";
 
 enum Gender {
@@ -18,22 +22,28 @@ export class User {
   id: number;
 
   @Column({ nullable: true })
-  name: string;
+  firstname: string;
 
   @Column({ nullable: true })
   lastname: string;
 
-  @Column({ nullable: true })
+  @Column()
   email: string;
 
   @Column({ nullable: true })
   phone: string;
 
-  @Column({ nullable: true })
-  access_due_date: Date;
+  @Column()
+  username: string;
 
-  @Column({ nullable: true })
-  points: number;
+  @Column()
+  password: string;
+
+  @Column()
+  access_due_date: Date = dayjs().add(-1, "date").toDate();
+
+  @Column()
+  points: number = 0;
 
   @Column("enum", {
     enum: Gender,
@@ -50,4 +60,8 @@ export class User {
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
   roles: Role[];
+
+  @OneToOne(() => Auth, (auth) => auth.user, { primary: true, cascade: true })
+  @JoinColumn()
+  auth: Auth;
 }
