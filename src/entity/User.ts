@@ -8,7 +8,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Auth } from "./Auth";
 import { Role } from "./Role";
 
 enum Gender {
@@ -33,7 +32,7 @@ export class User {
   @Column({ nullable: true })
   phone: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column()
@@ -57,11 +56,12 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
+  @Column({ nullable: true, default: null, type: 'text' })
+  token: string;
+  @Column({ nullable: true, default: null })
+  refreshToken: string;
+
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
   roles: Role[];
-
-  @OneToOne(() => Auth, (auth) => auth.user, { primary: true, cascade: true })
-  @JoinColumn()
-  auth: Auth;
 }
