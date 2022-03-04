@@ -17,10 +17,10 @@ createConnection()
     const { authMiddleware } = require('./middlewares/auth.middleware');
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
-    // app.use(xssClean);
-    // app.use(compression());
-    // app.use(cors());
-    // app.options("*", cors());
+    app.use(xssClean);
+    app.use(compression());
+    app.use(cors());
+    app.options('*', cors());
     app.use(authMiddleware);
     app.use(Router);
 

@@ -12,7 +12,6 @@ import sha1 from 'crypto-js/sha1';
 import { ApiError } from '../utils/apiError';
 import { omit } from '../utils/pick';
 import jwt from 'jsonwebtoken';
-import dayjs from 'dayjs';
 
 const connection = getConnection();
 const userRepository = connection.getRepository(User);

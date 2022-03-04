@@ -2,10 +2,8 @@ import dayjs from 'dayjs';
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from './Role';
@@ -41,7 +39,7 @@ export class User {
   @Column()
     access_due_date: Date = dayjs().add(-1, 'date').toDate();
 
-  @Column()
+  @Column('int')
     points = 0;
 
   @Column('enum', {
