@@ -1,67 +1,65 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Role } from "./Role";
+} from 'typeorm';
+import { Role } from './Role';
 
 enum Gender {
-  MALE = "male",
-  FEMALE = "female",
+  MALE = 'male',
+  FEMALE = 'female',
 }
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number;
 
   @Column({ nullable: true })
-  firstname: string;
+    firstname: string;
 
   @Column({ nullable: true })
-  lastname: string;
+    lastname: string;
 
   @Column()
-  email: string;
+    email: string;
 
   @Column({ nullable: true })
-  phone: string;
+    phone: string;
 
   @Column({ unique: true })
-  username: string;
+    username: string;
 
   @Column()
-  password: string;
+    password: string;
 
   @Column()
-  access_due_date: Date = dayjs().add(-1, "date").toDate();
+    access_due_date: Date = dayjs().add(-1, 'date').toDate();
 
-  @Column()
-  points: number = 0;
+  @Column('int')
+    points = 0;
 
-  @Column("enum", {
+  @Column('enum', {
     enum: Gender,
     nullable: true,
   })
-  gender: Gender;
+    gender: Gender;
 
-  @Column("date", { nullable: true })
-  birthdate: Date;
+  @Column('date', { nullable: true })
+    birthdate: Date;
 
   @Column({ nullable: true })
-  avatar: string;
+    avatar: string;
 
   @Column({ nullable: true, default: null, type: 'text' })
-  token: string;
+    token: string;
   @Column({ nullable: true, default: null })
-  refreshToken: string;
+    refreshToken: string;
 
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
-  roles: Role[];
+    roles: Role[];
 }
