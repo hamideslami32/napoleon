@@ -1,6 +1,6 @@
-import { Response, Request } from "express";
-import { getConnection } from "typeorm";
-import { User } from "../entity/User";
+import { Response, Request } from 'express';
+import { getConnection } from 'typeorm';
+import { User } from '../entity/User';
 
 const userRepository = getConnection().getRepository(User);
 

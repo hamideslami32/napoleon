@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-const ignorePaths = ["/auth/login", "/auth/register"];
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+const ignorePaths = ['/auth/login', '/auth/register'];
 export const authMiddleware = async (
   req: Request,
   res: Response,

@@ -1,10 +1,10 @@
-import joi from "joi";
+import joi from 'joi';
 import {
   TUserLoginBody,
   TUserLogoutBody,
   TUserRefreshBody,
   TUserRegisterBody,
-} from "../models/user.model";
+} from '../models/user.model';
 
 export const register = {
   body: joi.object<TUserRegisterBody>().keys({
