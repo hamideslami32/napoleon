@@ -1,10 +1,20 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from './Category';
+import { Episode } from './Episode';
+import { Tag } from './Tag';
 import { User } from './User';
 
-enum Payment_Type {
+export enum PaymentType {
   FREE = 'free',
   VIP = 'vip',
   CASH = 'cash',
+}
+
+export enum ContentStatus {
+  ACTIVE = 'active',
+  DRAFT = 'draft',
+  UPCOMMING = 'upcoming',
+  TRIAL = 'trial'
 }
 
 @Entity()
@@ -19,9 +29,9 @@ export class Course {
     description: string;
 
   @Column('enum', {
-    enum: Payment_Type,
+    enum: PaymentType,
   })
-    payment_type: Payment_Type;
+    payment_type: PaymentType;
 
   @Column({ nullable: true })
     video_url: string;
@@ -32,16 +42,24 @@ export class Course {
   @Column('numeric')
     price = 0;
 
-  @Column({ nullable: true })
-    status: string;
+  @Column({ nullable: true, enum: ContentStatus })
+    status: ContentStatus;
 
   @Column({ nullable: true })
     release_date: Date = null;
 
-  @Column({ nullable: true })
-    category_id: number;
+  @OneToOne(() => Category)
+  @JoinColumn()
+    category: Category;
+
+  @ManyToMany(() => Tag)
+  @JoinTable()
+    tags: Tag[];
 
   @ManyToOne(() => User, (user) => user.courses)
   @JoinColumn({ name: 'author' })
     author: User;
+
+  @OneToMany(() => Episode, (episode) => episode.course)
+    episodes: Episode[];
 }
