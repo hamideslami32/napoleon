@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
-const ignorePaths = ['/auth/login', '/auth/register'];
+const ignorePaths = ['/auth/login', '/auth/register', '/auth/refresh'];
 export const authMiddleware = async (
   req: Request,
   res: Response,

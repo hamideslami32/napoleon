@@ -60,7 +60,7 @@ export const refresh = async (req: Request, res: Response) => {
   const { refreshToken, token } = req.body as TUserRefreshBody;
 
   const user = await userRepository.findOne({
-    where: { auth: { refreshToken, token } },
+    where: { refreshToken, token },
   });
   if (!user)
     return res.status(401).json({
