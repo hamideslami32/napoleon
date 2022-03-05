@@ -8,37 +8,28 @@ import {
   TUserRegisterBody,
 } from '../models/user.model';
 import sha256 from 'crypto-js/sha256';
-import sha1 from 'crypto-js/sha1';
 import { ApiError } from '../utils/apiError';
 import { omit } from '../utils/pick';
-import jwt from 'jsonwebtoken';
+import { generateToken, verifyToken } from '../utils/jwt';
 
 const connection = getConnection();
 const userRepository = connection.getRepository(User);
 
-const generateAuth = async (user: User) => {
-  const token = jwt.sign({ data: user }, process.env.secret, {
-    expiresIn: '1h',
-  });
-  const refreshToken = sha1(token).toString();
-  user.token = token;
-  user.refreshToken = refreshToken;
-  await userRepository.update(user.id, user);
-  return { token, refreshToken };
-};
+
 export const login = async (req: Request, res: Response) => {
   const body = req.body as TUserLoginBody;
   const passwordHash = sha256(body.password).toString();
   const user = await userRepository.findOne({
     where: { username: body.username, password: passwordHash },
   });
-  if (!user)
+  if (!user) {
     return res.status(401).json({
       error: new ApiError(401, 'username or password is invalid'),
     });
+  }
 
-  if (!user.token || !jwt.verify('jwt ' + user.token, process.env.secret)) {
-    await generateAuth(user);
+  if (!user.token || !(await verifyToken(user.token))) {
+    await generateToken(user);
   }
 
   const response = omit(user, ['password']);
@@ -51,8 +42,10 @@ export const logout = async (req: Request, res: Response) => {
     user.token = null;
     user.refreshToken = null;
     await userRepository.update(user.id, user);
+    res.status(200).send();
+  } else {
+    res.status(400).json({ message: 'token doesn\'t exist' });
   }
-  return res.status(200).send();
 };
 export const register = async (req: Request, res: Response) => {
   const body = req.body as TUserRegisterBody;
@@ -62,19 +55,19 @@ export const register = async (req: Request, res: Response) => {
   user.password = sha256(body.password).toString();
   user.email = body.email;
   const savedUser = await userRepository.save(user);
-  Object.assign(savedUser, await generateAuth(savedUser));
+  Object.assign(savedUser, await generateToken(savedUser));
   res.status(200).json(omit(savedUser, ['id']));
 };
 export const refresh = async (req: Request, res: Response) => {
   const { refreshToken, token } = req.body as TUserRefreshBody;
 
   const user = await userRepository.findOne({
-    where: { auth: { refreshToken, token } },
+    where: { refreshToken, token },
   });
   if (!user)
     return res.status(401).json({
       error: new ApiError(401, 'no user with this token found'),
     });
-  const newTokens = await generateAuth(user);
+  const newTokens = await generateToken(user);
   return res.status(200).json(newTokens);
 };

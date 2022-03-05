@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-const ignorePaths = ['/auth/login', '/auth/register'];
+import { verifyToken } from '../utils/jwt';
+const ignorePaths = ['/auth/login', '/auth/register', '/auth/refresh'];
 export const authMiddleware = async (
   req: Request,
   res: Response,
@@ -8,6 +8,6 @@ export const authMiddleware = async (
 ) => {
   if (ignorePaths.includes(req.path)) return next();
   const { authorization } = req.headers;
-  if (!authorization || !jwt.verify(`jwt ${authorization}`, process.env.secret)) return res.status(401).send();
+  if (!authorization || !(await verifyToken(authorization))) return res.status(401).json({ message: 'Unauthorized user' });
   next();
 };

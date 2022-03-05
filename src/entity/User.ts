@@ -4,9 +4,12 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from './Role';
+import { Course } from './Course';
+
 
 enum Gender {
   MALE = 'male',
@@ -54,7 +57,7 @@ export class User {
   @Column({ nullable: true })
     avatar: string;
 
-  @Column({ nullable: true, default: null, type: 'text' })
+  @Column({ nullable: true, default: null, type: 'varchar', length:'1000' })
     token: string;
   @Column({ nullable: true, default: null })
     refreshToken: string;
@@ -62,4 +65,8 @@ export class User {
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
     roles: Role[];
+
+  @OneToMany(() => Course, course => course.author)
+    courses: Course[];
+
 }
