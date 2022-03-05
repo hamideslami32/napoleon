@@ -42,8 +42,10 @@ export const logout = async (req: Request, res: Response) => {
     user.token = null;
     user.refreshToken = null;
     await userRepository.update(user.id, user);
+    res.status(200).send();
+  } else {
+    res.status(400).json({ message: 'token doesn\'t exist' });
   }
-  return res.status(200).send();
 };
 export const register = async (req: Request, res: Response) => {
   const body = req.body as TUserRegisterBody;

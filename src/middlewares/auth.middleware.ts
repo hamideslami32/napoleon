@@ -8,6 +8,6 @@ export const authMiddleware = async (
 ) => {
   if (ignorePaths.includes(req.path)) return next();
   const { authorization } = req.headers;
-  if (!authorization || !(await verifyToken(authorization))) return res.status(401).send();
+  if (!authorization || !(await verifyToken(authorization))) return res.status(401).json({ message: 'Unauthorized user' });
   next();
 };

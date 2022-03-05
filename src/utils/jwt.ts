@@ -10,7 +10,7 @@ const userRepository = connection.getRepository(User);
 
 export const verifyToken = (token: string): Promise<boolean> => {
   return new Promise((resolve) => {
-    jwt.verify(token.includes('jwt ') ? token : `jwt ${token}`, process.env.secret, (err) => {
+    jwt.verify(token, process.env.secret, (err) => {      
       resolve(!err);
     });
   });

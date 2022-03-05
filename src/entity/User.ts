@@ -57,7 +57,7 @@ export class User {
   @Column({ nullable: true })
     avatar: string;
 
-  @Column({ nullable: true, default: null, type: 'text' })
+  @Column({ nullable: true, default: null, type: 'varchar', length:'1000' })
     token: string;
   @Column({ nullable: true, default: null })
     refreshToken: string;
