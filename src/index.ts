@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import express from 'express';
-import xssClean from 'xss-clean';
+// import xssClean from 'xss-clean';
 import compression from 'compression';
 import cors from 'cors';
 import { ApiError } from './utils/apiError';
@@ -17,7 +17,7 @@ createConnection()
     const { authMiddleware } = require('./middlewares/auth.middleware');
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
-    app.use(xssClean);
+    // app.use(xssClean);
     app.use(compression());
     app.use(cors());
     app.options('*', cors());
@@ -31,4 +31,4 @@ createConnection()
       console.log(`server is listening on port ${port}`);
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => console.error(error));

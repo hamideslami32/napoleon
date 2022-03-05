@@ -3,9 +3,7 @@ import httpStatus from 'http-status';
 import { pick } from '../utils/pick';
 import Joi from 'joi';
 
-export const validate = (schema) => (req, res, next) => {
-  console.log(req.body);
-  
+export const validate = (schema) => (req, res, next) => {  
   const validSchema = pick(schema, ['params', 'query', 'body']);
   const object = pick(req, Object.keys(validSchema));
   const { value, error } = Joi.compile(validSchema)

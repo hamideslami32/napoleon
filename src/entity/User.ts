@@ -4,9 +4,12 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from './Role';
+import { Course } from './Course';
+
 
 enum Gender {
   MALE = 'male',
@@ -62,4 +65,8 @@ export class User {
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable()
     roles: Role[];
+
+  @OneToMany(() => Course, course => course.author)
+    courses: Course[];
+
 }
