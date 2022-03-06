@@ -1,5 +1,7 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Bundle } from './Bundle';
 import { Category } from './Category';
+import { Comment } from './Comment';
 import { Episode } from './Episode';
 import { Tag } from './Tag';
 import { User } from './User';
@@ -62,4 +64,12 @@ export class Course {
 
   @OneToMany(() => Episode, (episode) => episode.course)
     episodes: Episode[];
+
+  @ManyToMany(() => Comment)
+  @JoinTable()
+    comments: Comment[];
+
+  @ManyToOne(() => Bundle, bundle => bundle.courses)
+  @JoinColumn()
+    bundle: Bundle;
 }
