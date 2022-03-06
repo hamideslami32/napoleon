@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from './Category';
+import { Comment } from './Comment';
 import { ContentStatus, Course } from './Course';
 
 export enum EpisodeType {
@@ -29,7 +30,7 @@ export class Episode {
   @Column({ nullable: true })
     image_url: string;
 
-  @Column({ type:'enum', enum: EpisodeType })
+  @Column({ type: 'enum', enum: EpisodeType })
     type: EpisodeType;
 
   @Column({ enum: ContentStatus })
@@ -42,4 +43,8 @@ export class Episode {
   @OneToOne(() => Category)
   @JoinColumn()
     category: Category;
+
+  @ManyToMany(() => Comment)
+  @JoinTable()
+    comments: Comment[];
 }

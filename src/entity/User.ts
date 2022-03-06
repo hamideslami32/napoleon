@@ -9,6 +9,10 @@ import {
 } from 'typeorm';
 import { Role } from './Role';
 import { Course } from './Course';
+import { Article } from './Article';
+import { Comment } from './Comment';
+import { Subscription } from './Subscription';
+import { Payment } from './Payment';
 
 
 enum Gender {
@@ -57,7 +61,7 @@ export class User {
   @Column({ nullable: true })
     avatar: string;
 
-  @Column({ nullable: true, default: null, type: 'varchar', length:'1000' })
+  @Column({ nullable: true, default: null, type: 'varchar', length: '1000' })
     token: string;
   @Column({ nullable: true, default: null })
     refreshToken: string;
@@ -69,4 +73,17 @@ export class User {
   @OneToMany(() => Course, course => course.author)
     courses: Course[];
 
+  @OneToMany(() => Article, article => article.author)
+    articles: Article[];
+
+  @OneToMany(() => Comment, comment => comment.user)
+    comments: Comment[];
+
+
+  @ManyToMany(() => Subscription, subscription => subscription.users)
+  @JoinTable()
+    subscriptions: Subscription[];
+
+  @OneToMany(() => Payment, payment => payment.user)
+    payments: Payment[];
 }
